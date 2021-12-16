@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="main.css" />
+    <title>QuID - Qualified Identity Ontology</title>
+  </head>
+  <body resource="" typeof="owl:Ontology">
+    <h1 property="dcterms:title">The Qualified Identity Ontology (QuID)</h1>
+    <dl>
+      <dt>Status</dt>
+      <dd property="rdfs:comment"><em>Informal Draft</em></dd>
+      <dt>Date</dt>
+      <dd property="dcterms:date">2021-12-16</dd>
+      <dt>Author</dt>
+      <dd><a property="dcterms:creator" href="https://neverspace.net/id#self">Niklas Lindström</a></dd>
+      <dt>License</dt>
+      <dd><a rel="license" href="http://creativecommons.org/licenses/by/4.0/">CC-BY 4.0</a></dd>
+    </dl>
+    <article>
+      <h1>An Ontology for Qualifying Identities</h1>
+      <section>
+        <h2>Introduction</h2>
+        <figure>
+          <blockquote>
+            <p><a href="https://en.wikipedia.org/wiki/All_models_are_wrong">All models are wrong, but some are useful</a>.</p>
+          </blockquote>
+          <figcaption>&mdash;<a href="https://en.wikipedia.org/wiki/George_E._P._Box">George Box</a></figcaption>
+        </figure>
+        <p>
+          The notion of identity is a simple abstraction that enables us to construct direct, discrete statements about domains and relations of interest. However, this notion is fundamentally a limitation, forcing us to admit that descriptions made in this manner have to either deal with concepts on a fairly basic level, omitting details, variations, aspects of locality, temporality, perspective and intellectual differences, or to remodel terminology as the coverage of a domain goes into ever more specialized details.
+        </p>
+      </section>
+      <section>
+        <h2>Conventions</h2>
+        <div>
+          <p>
+            Data representations in this document are given in the <a href="https://www.w3.org/TR/turtle/">Turtle</a> syntax for <a href="https://www.w3.org/TR/rdf11-concepts/">RDF</a>.
+            The following prefixes are used throughout in code examples and references.
+          </p>
+          <pre>
+prefix : &lt;https://example.org/vocab/>
+prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#>
+prefix owl: &lt;http://www.w3.org/2002/07/owl#>
+prefix skos: &lt;http://www.w3.org/2004/02/skos/core#>
+prefix quid: &lt;https://w3id.org/quid/></pre>
+        </div>
+      </section>
+      <section>
+        <h2>Example</h2>
+        <p>
+          Neither Stockholm nor Sweden are stable and durable patterns of energy. They are, at best, semi-<a href="https://en.wikipedia.org/wiki/Perdurantism">perdurable</a> sociopolitical notions correlated to activities and coarse-grained geographical measurements.
+        </p>
+        <p>
+          If this appears unobvious to some, consider the town of Abingdon, part of Oxfordshire since 1974, formerly of Berkshire. Or the name and parent country of St. Petersburg during the twentieth century.  Or the relocation of (central parts of) the town Kiruna in the north of Sweden. Or the political status of Taiwan. (These matters indicate that borders are of the mind, not of the earth (which may arguably also be of the mind).)
+        </p>
+        <p>
+          Consider the case of Abingdon:
+        </p>
+        <pre>
+&lt;Abingdon> :partOf &lt;Berkshire> .</pre>
+        <p>
+          In our day and time, the above assertion is no longer a fact. Berkshire is now in the county of Oxfordshire. But it is true that Abingdon was part of the Berkshire of the 1600s and some 300 years onwards. If we were to remodel this as a spatiotemporal relationship instead, the problem of describing this fact would go away. But we would no longer have a generalized use of the term <code>isPartOf</code>, since we would in specialized situations replace that with something like:
+        </p>
+        <pre>
+&lt;Abingdon> :temporalRelationship [ a :TemporalPartitiveRelationship ;
+        :object &lt;Berkshire> ;
+        :earliestYear "1600" ;
+        :latestYear "1974" ;
+        rdfs:label "from 17c. to 1974"@en
+    ] .</pre>
+        <p>
+          While arguably this is the most apt model here, there are many practical situations where remodelling or variations of terminology is not doable or desirable. You may have a stable terminology and only a few corner cases where you need to qualify certain details. In such cases, we may instead <em>qualify identities</em> by restricting them in one or more modalities. By qualifying Berkshire to this state, we can link to that without remodelling the relationship:
+        </p>
+        <pre>
+&lt;Abingdon> :partOf [ a <b>quid:QualifiedIdentity</b> ;
+        <b>quid:qualifies</b> &lt;Berkshire> ;
+        :earliestYear "1600" ;
+        :latestYear "1974" ;
+        rdfs:label "Berkshire from 17c. to 1974"@en
+    ] .</pre>
+        <p>
+          This is the key concept that QuID formalizes. Notice that the thing is still Berkshire (which here is defined by nothing more than a nominal identifier), albeit circumstantially defined&mdash;<em>qualified</em>&mdash;within a scope of time.
+        </p>
+      </section>
+      <section>
+        <h2>Definitions</h2>
+        <div id="QualifiedIdentity" resource="QualifiedIdentity" typeof="owl:Class">
+          <h3 property="rdfs:label">Qualified Identity</h3>
+          <p>
+          The class <code property="skos:notation" lang="">quid:QualifiedIdentity</code>.
+          </p>
+          <link property="rdfs:isDefinedBy" resource="" />
+          <p property="skos:definition">
+            <q>Qualified identities</q> are the descriptively identified states of entities as viewed from the varying perspectives of time, space, modes of intellect, interpretation, or virtually any other <em>point of view</em>. They are the circumstantially defined entities within a particular modality or modalities.
+          </p>
+          <p>
+            All instances of this class have the property:
+          </p>
+          <dl id="qualifies" resource="qualifies" typeof="owl:ObjectProperty">
+            <dt>
+              <b property="rdfs:label">Qualifies</b>
+              (<code property="skos:notation" lang="">quid:qualifies</code>)
+              <link property="rdfs:isDefinedBy" resource="" />
+            </dt>
+            <dd>
+              <p>
+                which references any
+                <a property="rdfs:range" href="owl:Thing"><code>owl:Thing</code></a>,
+                being a possibly less qualified aspect of the same thing.
+              </p>
+              <p>
+                It is a sub-property of 
+                <a property="rdfs:subPropertyOf" href="skos:broader"><code>skos:broader</code></a>.
+              </p>
+              <p property="skos:definition">
+                The <q>qualifies</q> relation designates the more general entity of which this entity is a modal aspect.
+              </p>
+            </dd>
+          </dl>
+        </div>
+        <div id="QualifiedValue" resource="QualifiedValue" typeof="owl:Class">
+          <h3 property="rdfs:label">Qualified Value</h3>
+          <p>
+          The class <code property="skos:notation" lang="">quid:QualifiedValue</code>.
+          </p>
+          <link property="rdfs:subClassOf" resource="quid:QualifiedIdentity" />
+          <link property="rdfs:isDefinedBy" resource="" />
+          <p property="skos:definition">
+            <q>Qualified values</q> are the circumstantially defined values within a particular point of view.
+          </p>
+          <p>
+            All instances of this class have the property:
+          </p>
+          <dl id="value" resource="value" typeof="owl:DatatypeProperty">
+            <dt>
+              <b property="rdfs:label">Value</b>
+              (<code property="skos:notation" lang="">quid:value</code>)
+              <link property="rdfs:isDefinedBy" resource="" />
+            </dt>
+            <dd>
+              <p>
+                which references any
+                <a property="rdfs:range" href="rdfs:Literal"><code>rdfs:Literal</code></a>,
+                being the unqualified actual value.
+              </p>
+              <p>
+                It is a sub-property of 
+                <a property="rdfs:subPropertyOf" href="rdf:value"><code>rdf:value</code></a>.
+              </p>
+              <p property="skos:definition">
+                The <q>value</q> property designates the actual value of which this qualification is a modal aspect.
+              </p>
+            </dd>
+          </dl>
+        </div>
+      </section>
+      <section>
+        <h2>Background and Motivations</h2>
+        <p>
+          In RDF, modeling complex relationships and events is preferably done through qualification, making <em>entities</em> of the relationships, instead of an opaque arc, then describing the intricacies using properties and relations upon those.
+          This is known as
+          <q><a href="https://patterns.dataincubator.org/book/qualified-relation.html">Qualified Relations</a></q>
+          and is a fairly common pattern (see e.g. <a href="https://www.w3.org/TR/prov-o/#description-qualified-terms">Qualified Terms in PROV-O</a>). It is related to the more general notion of <a href="https://patterns.dataincubator.org/book/nary-relation.html">N-ary relations</a>, differing only in that qualified relationships are <em>intended</em>, through context, to primarily relate two entities (elaborating upon what cannot be captured in the triple itself, as it were).
+        </p>
+        <p>
+          In cases where the relationships used are preferably kept direct in one arc (one triple) with one labelled predicate, <q><a href="https://www.w3.org/TR/rdf11-mt/#whatnot">reification</a></q>, is sometimes used instead. This is a complicated choice, as this is a model of the <q>statement</q> itself, i.e. the utterance or assertion of the relation (its <q>fact</q>). It purportedly <em>steps out of the picture</em>, attempting to speak of the assertion (and in doing so, it does not assert the triple).
+        <p>
+          This needs to be contrasted with <q><a href="https://www.w3.org/TR/rdf11-mt/#rdf-datasets">named graphs</a></q>, an established technique for chunking RDF statements into contained units, each bounded and <q>labelled</q> by an IRI (with the, alas, semantically undefined state in regards to <q>denoting</q> the graph). Barring that, this is a perfect enough vehicle for separating the depicted description from its nature as a depiction, thus making it possible to describe its <q>strokes of paint</q>, as it were. Marks on a paper. Claims as recorded.
+        </p>
+      </section>
+      <section>
+        <h3>The Curious Case of Fact-Altering Facts</h3>
+        <p>
+          While never deprecated, reification hasn't been popularized much during the last decade or two. It's been in the background, sometimes popping up in discussions, or being used as a last resort when named graphs are considered to coarse-grained or semantically ill-defined, or when it is impractical to make multitudes of graphs if, for some reason, each triple needs to be intricately and uniquely decribed.
+        </p>
+        <p>
+          In 2019, reification came back into focus through <a href="https://w3c.github.io/rdf-star/cg-spec">RDF-star</a>, which again tackles this modelling by making statements about statements.
+        </p>
+        <p>
+          Potentially problematic, it appears that in the RDF-star practise (conveyed through examples), specifically its form of annotated statements, which <em>are asserted</em>, there is no clear and consistent distinction between the statement and the <em>event which it describes</em>. This presents an interesting potential conflation, in that statements about the statement easily <em>veer</em> from the arc, the act of stating something, to the implied notion, often an event, associated with the assertion. Therefore, e.g. timestamps upon the arc sometimes appear to be about the event, that is of having a relationship established (such as <em>becoming</em> a <q>member of</q> something). This appears to be a problematic distinction to maintain, and one which lots of the examples in the <a href="https://lists.w3.org/Archives/Public/public-rdf-star/">RDF-star mailing list</a> appear decidedly dependent upon.
+        </p>
+        <p>
+          Now, it can be argued that while there is a distinction between the statement (by someone) and the event (as observed, not necessarily by the same someone), it is not relevant, nor, depending on notions of perspective, a stable distinction. They may be unidentical but effectively isomorphic (cf. "surface and depth" as discussed at length by Gilles Deleuze in <cite href="https://en.wikipedia.org/wiki/The_Logic_of_Sense">Logic of Sense</cite>). However, formal definitions of statements, and their reification, goes to great length to claim that this distinction is crucial. Therefore, given the proliferation of examples which goes against it, it may be deemed that a practise of <q>gaming</q> these mechanisms is emerging here.
+        </p>
+        <p>
+          The gist of this problem is that it is not apparent whether an assertion is or is not affected by further assertions about that assertion. Compare this to QuID, where a qualified identity <em>by definition</em> is restricted to its stated modalities, be it in time, space or any other point of interest. It does not touch the veracity of an assertion, it tackles the necessity of qualifying the identity of the object in a specific contextual modality.
+        </p>
+        <p>
+          To make reifications like this practical, RDF-star <em>extends</em> the triple model. The effect of implementing that goes further than just adding a syntactic construct, as the core of the model now has to cater for this all the way down. Even with backwards-compatible support for "just" triples as a base, the new way turns the substrate inside out, so to speak, and makes every triple susceptible to potentially deeply complex, nested reifications. While this affects RDF implementations, this alteration isn't necessarily the big problem here. The main issue with that is that this does not happen within the simple confinement of triples (which can be confined and chunked as units of descriptions in named graphs), but inexorably mixes the triple model with the "outside the box" notion hitherto kept at the "picture frame" level of named graphs. That is a strange loop indeed, which implies that there are "fact-altering facts", rather than keeping it all as "assertions", easy enough to reason about. RDF-star effectively defines a <q><a href="https://en.wikipedia.org/wiki/Hypergraph">hypergraph</a></q>, which has been shown to increase <a href="https://getpocket.com/read/3431090884">computational complexity</a>. This may be desired for certain reasons, but the cost in terms of application and, more crucially, <em>comprehension</em>, must be thoroughly assessed.
+        </p>
+        <p>
+          From a user's perspective, practically, during describing activities (often using interfaces rather than specialized syntax), nesting (or when to nest) descriptions can be tricky in itself. The notion of blank nodes themselves, unnamed entities, which can be used in syntactic representations to do <q>nesting</q>, takes some getting used to. A <em>different kind</em> of nesting is likely to be difficult enough to expect to be consistently applied, especially when its nuance is hard to formulate through applied domain-specific semantics. For instance, a notion of "at" on a statement may refer to either the utterance or the observation, and further definition of the term is required to pin down the expected meaning, as well as diligence in its application to avoid veering from the expected interpretation of the subsequent receiver. We're back into <a href="https://en.wikipedia.org/wiki/HTTPRange-14">httpRange-14</a> territory again; this time around potentially <em>for every statement</em>. While <q><a href="http://www.jenitennison.com/2012/05/11/using-punning-to-answer-httprange-14.html">punning</a></q> may theoretically come to the rescue, it didn't really manifest in property definitions everywhere to clarify the document/documented differences, so it does not appear likely.
+        </p>
+        <p>
+          With all that said, it must be equally assessed whether the notion of a qualified identity is actually more comprehensible than "fact-altering facts". The latter may be a picture within a picture, but the former is, admittedly, nevertheless a drawing tool for idiomatically skewed illustrations. The major difference here is about whether to remake the technical substrate to accommodate for the design, and which idea and connected user stories is actually easier to teach and maintain in practise. This requires careful comparison with thorough evaluation. QuID is conceived as a contrasting alternative, striving for increased awareness of implications and comprehension.
+        </p>
+      </section>
+      <section>
+        <h3>Everything Is An Event</h3>
+        <p>
+          Most if not all of the problems that this <q>gaming</q> of reification of relationships and properties attempt to solve stem from avoiding to model and describe events themselves. This is arguably better in general, logically, but forces the applied vocabulary to incorporate terms describing a deeper level of granularity. It also only conceptualises time (and possibly space through locations, though as shown locations other than coordinates are hard to pin down).
+        </p>
+      </section>
+      <section>
+        <h3>Everything Is From A Point Of View</h3>
+        <p>
+          Compare this to QuID, which is about identifying a <em>qualified state</em> of an entity. This state can be as varied as needed, temporally, spatially, intellectually, culturally or any other dimension of the domain <em>of interest</em>. Points of view, states of mind, even states of captured descriptions of things, are all valid and of equal standing to this model. This is just the nature of our substrate of statements, being fundamendally grounded in our varyingly discrete (as in varyingly granular and therefore ultimately limited) conceptual notions, expressed through finite vocabularies.
+        </p>
+        <p>
+          This means that <em>instead</em> of attempting to describe the statement (in cases where the event is not explicitly modelled), and somewhat conflating the statement with the event, QuID models <em>the states of the identities</em> of the relationship, therefore capturing the essential characteristics of the event through its constituents. While this is not without its own limitations, it is doing so within the simplicity of the regular model of triples. It is also not a replacement for modelling events where those are needed; when such needs are apparent it is very much preferred to do so. Furthermore, this modelling is not in any way limited to events (as temporal entities), but is just as applicable to other modalities, such as points of views, spatial or compositional variations, levels of generality or specificity in any conceivable kind of dimension or perspective.
+        </p>
+        <p>
+          Does this not present similar problems as applied reification, in terms of vagueness? Yes and no; yes it goes into the territory of vagueness, and may very well be used for radically idiomatic notions of identity. But it does so <em>explicitly</em>, by design, in that it formally charges the identity as contextually qualified, and this context can only be interpreted properly by understanding the statements about the qualified identity. It is explicitly defined by its extension of description. (Arguably, this is the case for every identity whatsoever, but since that is not exhaustively recognized, we cannot universally expect that.) Therefore, the presence of a <code>quid:qualifies</code> property on any entity immediately conveys its nature as a qualified identity, meaning that it is of the same kind, but of a narrower nature than the thing qualified; and that this narrower nature is conveyed through the other properties if it.
+        </p>
+        <p>
+          A principal point is this: qualified identities are on equal ground with the properties relating and describing them. Just as these properties are inevitably limited by their own definitions (and extensions through usage), the identities they capture are as well. They are bound together in the same semantic fabric, if you will, and that ultimately limits what they express. That is the gist of symbols, and of identities.
+        </p>
+      </section>
+      <section>
+        <h2>Use Cases</h2>
+        <p>
+          It is important to understand that some of these selections are made to show-case the aforementioned <q>gaming</q> of reification to express event-like or circumstantial relations, and how the sought after <em>meaning</em> could be expressed using qualified identities rather than annotated arcs (both of which often suffer from a lack of a more expressive terminology). Most crucially, there is virtually nothing in the QuID design which caters for the <q><a href="https://en.wikipedia.org/wiki/Graph_database#Labeled-property_graph">Property Graph</a></q> notion of annotatable multiset arcs. This is intentional, since the critique made above about the veering towards conflation of assertion and event, resulting in a dissolution of the triple substrate (pulling out the carpet from beneath our feet, if you will), is basically what the stage of PGs is like; <q>invent-your-own</q> semantics. QuID is based upon RDF to avoid that reinvention. (As is RDF-star, hopefully not in vain as it veers towards some tricky complexities which may unsettle intuitions and infrastructure if the gaming of it multiplies.)
+        </p>
+        <p>
+          As already discussed, many of these cases are probably better modelled using events. But as the cases have been defined, the task at hand is to model them <em>without</em> new terms for the relationships.
+        </p>
+        <p>
+          Some of these examples use <code>rdfs:label</code> to explain what the <code>quid:QualifiedIdentity</code> captures. This is only for clarification, and isn't a necessary or even expected pattern.
+        </p>
+        <p>
+          Also note that the explicit use of <code>quid:QualifiedIdentity</code> is occasionally left out, since the <code>rdfs:domain</code> definition of <code>quid:qualifies</code> implies it.
+        </p>
+        <section>
+          <h3>Marrying Twice</h3>
+          <p>Inspired by the <a href="https://lists.w3.org/Archives/Public/public-rdf-star/2021Dec/0004.html">thread leading up to "RDF-star vs Wikidata for modelling Richard Burton"</a>.</p>
+          <p>When you don't model marriages as events, the spouse is captured in space-time (twice).</p>
+          <pre>
+&lt;liz_taylor> :married [ a <b>quid:QualifiedIdentity</b> ;
+    <b>quid:qualifies</b> &lt;richard_burton> ;
+    :role :husband ;
+    :year 1964 ;
+    :location &lt;montreal> ;
+    rdfs:label "Richard Burton at 1964 in Montreal, becoming a husband"@en ;
+    rdfs:comment "possibly being slightly inebriated"@en ;
+    :source [ <b>quid:qualifies</b> &lt;thePeeragePerson/p33443.htm#i334430> ; :retrieved "2020-08-07" ]
+  ] .
+
+&lt;liz_taylor> :married [ a <b>quid:QualifiedIdentity</b> ;
+    <b>quid:qualifies</b> &lt;richard_burton> ;
+    :year 1975 ;
+    :location &lt;botswana>;
+    rdfs:label "Richard Burton at 1975 in Botswana"@en ;
+    rdfs:comment ""Very much in love with Liz Taylor"@en
+  ] .</pre>
+        </section>
+        <section>
+          <h3>Historical Member</h3>
+          <p>When a model of membership is not available, it is perpetually true that a past entity, as once stated by X, was a member. (Adapted from <a href="https://lists.w3.org/Archives/Public/public-rdf-star/2021Dec/0052.html">Org membership from Dan Brickley</a>.)</p>
+          <pre>
+&lt;Full_Fact> :member_of &lt;IFCN> .
+
+[
+  quid:qualifies &lt;Snopes> ;
+  rdfs:label "Snopes between 15 April 2017 and 5 June 2019 according to X at 9 Dec 2021"@en ;
+  :started "2017-04-15" ;
+  :ended "2019-06-05" ;
+  :source [ quid:qualifies &lt;X> ; :at "2021-12-09" ]
+] :member_of &lt;IFCN> .</pre>
+        </section>
+        <section>
+          <h3>Works And Dreams</h3>
+          <p>(These are adapted from <a href="https://w3c.github.io/rdf-star/presentations/RDF-star_Lotico.pdf">a presentation about RDF-star at Lotico by Pierre-Antoine Champin And Olaf Hartig</a>.)</p> 
+          <h4>Alice at Work</h4>
+          <p>Lacking an employment model.</a>
+          <pre>
+&lt;#alice> :workingFor [
+    quid:qualifies &lt;#acme> ;
+    :since "2012-03-04"^^xsd:date;
+    :until "2018-09-10"^^xsd:date;
+    :accordingTo &lt;//acme.com/staff.html>
+  ] .</pre>
+          <h4>Alice Observed In Former Employer's Parked Car</h4>
+          <p>Without ownership and observation events.</a>
+          <pre>
+&lt;#car123>
+ :driver &lt;#alice> ;
+ :owner [ quid:qualifies &lt;#acme> ; :since "2019-06-01"^^xsd:date ] ;
+ :parkedIn [
+    quid:qualifies [ geo:longitude 4.86553; geo:latitude 45.78234 ] ;
+    :observedAt "2019-10-03T12:34:56Z"^^xsd:dateTime ].</pre>
+          <h4>Bob's Inception</h4>
+          <p>Now this is actually an intuitive use of qualified identities (the state of someone sleeping, and a fictional dream form of a person).</p>
+          <pre>
+&lt;#cartoon1> :depicts [
+      quid:qualifies &lt;#bob> ;
+      :state :sleeping ;
+      :dreamingOf [
+          quid:qualifies &lt;#alice> ;
+          :dreamingOf &lt;#bob>
+        ]
+  ] .</pre>
+        </section>
+        <section>
+          <h3>Wittgenstein Argumenting</h3>
+          <p>
+            Notions of persons, while commonly quite stable, do differ in many various qualifications, such as whom a public persona <em>really</em> is, perceived impressions, and naturally of age. In this simple example, we state that <a href="https://plato.stanford.edu/entries/wittgenstein/#LateWitt">the later Wittgenstein did argue against the early Wittgenstein</a> (while still being himself).
+          </p>
+          <pre>[
+    rdfs:label "Later Wittgenstein"@en ;
+    quid:qualifies &lt;Wittgenstein> ;
+    :at "192X"
+] :arguedAgainst [
+    rdfs:label "Early Wittgenstein"@en ;
+    quid:qualifies &lt;Wittgenstein> ;
+    :at "193X"
+] .</pre>
+        </section>
+        <section>
+          <h3>Revised Descriptions With Provenance</h3>
+          <p>Finally, this is a simplified example from a library catalogue, showing how qualified identities can be used even for actual reification, in a form which both asserts and annotates the identities and values. This may be considered construed, but since <em>any</em> modality is allowed, the applied semantics hold even for the modality of being asserted in a certain revision of a description.</p>
+          <pre>
+&lt;/item/1> :hasTitle [
+    <b>quid:qualifies</b> [ :mainTitle "Item One" ;
+                 :subtitle [ <b>quid:value</b> "an item" ;
+                             :addedIn &lt;rev3> ] ] ;
+    :addedIn &lt;rev2> ] ;
+  a [ <b>quid:qualifies</b> :Thing ; :addedIn &lt;rev2> ; :removedIn &lt;rev3> ] ,
+    [ <b>quid:qualifies</b> :Item ; :addedIn &lt;rev3> ] ;
+  :relatedTo [ <b>quid:qualifies</b> &lt;/item/2> ; :addedIn &lt;rev2> ; :removedIn &lt;rev3> ] ,
+             [ <b>quid:qualifies</b> &lt;/item/3> ; :addedIn &lt;rev3> ] .</pre>
+          <p>
+            For comparison, it is advised to consider how the alternative of unasserted reified statements appear, with just one added convenience, <code>r:statement</code>, for readability:
+          </p>
+          <pre>
+prefix r: &lt;./reification#>
+
+r:statement owl:inverseOf rdf:subject .
+
+&lt;/item/1> r:statement [
+    rdf:predicate :hasTitle ;
+    rdf:object [ :mainTitle "Item One" ;
+          r:statement [ rdf:predicate :subtitle ;
+                   rdf:object "an item" ;
+                   :addedIn &lt;rev3> ] ] ;
+    :addedIn &lt;rev2> ] ,
+  [ rdf:predicate rdf:type ; rdf:object :Thing ; :addedIn &lt;rev2> ; :removedIn &lt;rev3> ] ,
+  [ rdf:predicate rdf:type ; rdf:object :Item ; :addedIn &lt;rev3> ] ,
+  [ rdf:predicate :relatedTo ; rdf:object &lt;/item/2> ; :addedIn &lt;rev2> ; :removedIn &lt;rev3> ] ,
+  [ rdf:predicate :relatedTo ; rdf:object &lt;/item/3> ; :addedIn &lt;rev3> ] .</pre>
+          <p>
+            Obviously, the differences in semantics and usability here calls for informed choice in going for the one form or the other. The qualified identity form is more of a <a href="https://plato.stanford.edu/entries/quotation/#MixeQuot">mixed quotation</a>, differing from the statements in that the objects are qualified from the descriptive point of view, all in the same "picture", asserted and represented as regular triples.
+          </p>
+        </section>
+      </section>
+      <section>
+        <h2>Application</h2>
+        <p>
+          In SPARQL, using property paths is simple enough when you want to find all things related through a property (here <code>partOf</code>), regardless of any qualified notion (e.g. unconfined to perspectives like temporality).
+        </p>
+        <p>
+          Consider these, based on earlier examples:
+        </p>
+        <pre>
+SELECT * {
+  &ltAbingdon> :partOf/<b>quid:qualifies</b>* ?historical_or_contemporary_region .
+}
+
+SELECT * {
+  &lt;liz_taylor> :married/<b>quid:qualifies</b>* ?spouse_past_or_present_purported_or_imagined .
+}</pre>
+        <p>The choice of <code>quid:qualifies*</code> here over just <code>quid:qualifies?</code> is to accommodate for the possibility of a chain of qualifications in a general setting. Depending on application practises, this can be simplified or even abstracted away.</p>
+        <p>
+          It is currently advised to handle this in the application layer, to enable end users (e.g. description creators) to <em>utilize</em> these forms without forcing other users (e.g. consumers) having to do much extra work to cope with them. Naturally, the distinction between qualified and direct relations is available for those who need it. This is similar to how some applications can follow <code>skos:broader</code> chains up and down to facet match on topics arranged hierarchically.
+        </p>
+        <p>
+          If the QuID design appears valuable, it might be worthwhile to incorporate it into RDF toolkits, akin to identity smushing of <code>owl:sameAs</code> assertions peformed in some (but far from all) RDF libraries. Or like how <code>rdf:List</code> as a triple representation of linked lists often have convenience methods and forms implemented.
+        </p>
+      </section>
+      <section>
+        <h2>Relationship To Other Designs</h2>
+        <p>
+          The pattern defined by QuID is by no mean novel. It is inspired and informed by lots of prior work, and is at best an attempt at formalizing a common intersection of these.
+        </p>
+        <h3>Value</h3>
+        <p>
+          <code><a href="http://www.w3.org/1999/02/22-rdf-syntax-ns#value">rdf:value</a></code> 
+          is in its earliest usage (<a href="https://www.dublincore.org/specifications/dublin-core/dcq-rdf-xml">as exemplified by DCMI</a>) almost alike <code>quid:qualifies</code>. But since it is (almost) exclusively used to provide a <em>literal</em> value in an informal Structured Value pattern, it is not the same. Therefore, QuID defines <code><a href="#value">quid:value</a></code> as a sub-property of <code>rdf:value</code>, to formalize qualifications of literals.
+        </p>
+        <h3>Same As</h3>
+        <p>
+          Obviously
+          <code><a href="http://www.w3.org/2002/07/owl#sameAs">owl:sameAs</a></code> 
+          denotes the same thing. The similarity to <code>quid:qualifies</code> is confined to mechanical treatment where the different qualifications are not relevant, in which case a non-reasoning RDF application needs to follow the indirected resource in the same manner.
+        </p>
+        <h3>Broader</h3>
+        <p>
+          Similarly, <code><a href="http://www.w3.org/2004/02/skos/core#broader">skos:broader</a></code> can be considered an indirection. Interestingly, <code>quid:qualifies</code> is similar also in that it relates a more <q>general</q> notion. Crucially though, this notion is still within the same <q>identity</q>. So at most, there is a super-property relation here (which also is defined).
+        </p>
+        <h3>Exact Match</h3>
+        <p>
+          By contrast, <code><a href="http://www.w3.org/2004/02/skos/core#exactMatch">skos:exactMatch</a></code> is an indirection mainly, perhaps only, in conceptualization, and in many other ways represents a shared identity. However, the specific semantics of SKOS here regarding the two identities being separated by <code>skos:ConceptScheme</code> makes the relation to <code>quid:qualifies</code> less exact (they're more of an exact match...). The latter may very well relate identities within the same concept scheme, if any at all.
+        </p>
+        <h3>Focus</h3>
+        <p>
+          The relationship established between a <code>skos:Concept</code> and a <q>real</q> thing by
+          <code><a href="http://xmlns.com/foaf/0.1/focus">foaf:focus</a></code>
+          is conceptually similar to <code>quid:qualifies</code>. But there is no distinction between the natures (types) of the subject and object in the former. On the contrary, when using <code>quid:qualifies</code>, its subject and object share the same core type, with the former merely being more qualified (as in specific, or precise, or any other kind of modal restriction, down to being a mixed quotation). With <code>foaf:focus</code>, the relation is between a <q>conceptualization</q> and its conceptualized <q>thing</q>.
+        </p>
+        <h3>Role</h3>
+        <p>
+          The usage pattern defined by
+          <code><a href="https://schema.org/Role">schema:Role</a></code>
+          is quite similar to the pattern established here. They both represent applied semantics for the qualification pattern, albeit with some clear differences. For one <code>schema:Role</code> uses the rather odd notion of <em>repeating</em> the relation to it to reference the <q>actual</q> object. That makes for some rather illogical interpretations for some relations (for instance a <code>ownedBy</code> relation to a <code>Role</code> qualifying it would require stating that this role is itself <code>ownedBy</code> the owner, rather than being an intermediary form of the object). And again, the <code>Role</code> is definitely of a different type than the indirected thing.
+        </p>
+        <h3>Nomen</h3>
+        <p>
+          As defined, the
+          <a href="https://www.iflastandards.info/lrm/lrmer#E9">LRM Nomen</a>
+          <blockquote>can be understood as the reification of a relationship between an instance of res and a string</blockquote>, making it more akin to <code>foaf:focus</code> than to <code>quid:qualifies</code>. Thus, the same difference applies.
+        </p>
+        <p>
+          Also, <a href="https://en.wikipedia.org/wiki/Haddocks%27_Eyes">Haddocks' Eyes</a> comes to mind, a poem sung by <q>The White Knight</q> to <q>Alice</q> in Lewis Carroll's <q>Through the Looking-Glass</q>.
+        <ul>
+          <li>The song's <em>name</em> is <strong>called</strong> Haddocks' Eyes.</li>
+          <li>The song's <em>name</em> <strong>is</strong> The Aged Aged Man.</li>
+          <li>The song is <strong>called</strong> Ways and Means.</li>
+          <li>The song <strong>is</strong> A-sitting on a Gate.</li>
+        </ul>
+        <p>Which could be encoded like:</p>
+        <pre>
+&lt;Haddocks+Eyes> a :Name ;
+  rdfs:label "Haddocks’ Eyes" ;
+  rdf:value "The Aged Aged Man" ;
+  :of &lt;Ways+and+Means> .
+
+&lt;Ways+and+Means> a :Song ;
+  rdfs:label "Ways and Means" ;
+  rdf:value "A-sitting on a Gate" .</pre>
+        <p>
+          It wouldn't make much sense to model this using QuID.
+        </p>
+        <h3>Things As Concepts</h3>
+        <p>
+          The notion of qualified identities can be construed as presenting a <q>world view</q> where the notions of <code><a href="http://www.w3.org/2002/07/owl#Thing">owl:Thing</a></code> and <code><a href="http://www.w3.org/2004/02/skos/core#Concept">skos:Concept</a></code> become effectively the same. However, as these are not defined so, this is just a philosophical interpretation beyond their defined semantics. Whether a <code>quid:QualifiedIdentity</code> is <em>more</em> or <em>less</em> <q>conceptual</q> requires a philosophical analysis with <a href="https://goo.gl/Z1q2Ts">no clear outcome to be expected</a>.
+        </p>
+        <p>
+          Suffice to say, in this alluded world view of QuID, the only <q>accurate</q> description of the world is, as far as physicists can tell, the representation comprised of something along the order of <a href="https://www.popularmechanics.com/space/a27259/how-many-particles-are-in-the-entire-universe/">3.28 x 10<sup>80</sup></a> quarks, assuming a Planck-sized substrate and excluding every multidimensional complication like <a href="https://en.wikipedia.org/wiki/Brane">brane theory</a> and whatnot. Every less accurate description is merely a <a href="https://en.wikipedia.org/wiki/Fictionalism">useful fiction</a>. (Perhaps <em>everything</em> is.)
+        </p>
+      </section>
+    </article>
+  </body>
+</html>
