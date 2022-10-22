@@ -384,6 +384,28 @@ r:statement owl:inverseOf rdf:subject .
         </section>
       </section>
       <section>
+        <h2>Defining Qualifications</h2>
+        <p>
+          A challenging aspect of this design is about how to control, in editing and validation, what the qualification of something <em>is</em>. It is possible to use <code>quid:QualifiedIdentity</code> as a <em>mixin</em> for definining qualifications as subclasses of some given concrete class. These constrained classes can then be used with either <code>owl:Restriction</code> on existing properties, or in conjunction with specific properties defined for the given level of qualification, connected to the concrete, qualified class using <code>rdfs:domain</code> (or <code>rdfs:range</code> for properties linking to the kind of qualified things defined).
+        </p>
+        <p>Example:</p>
+        <pre>
+:MomentaryThing a owl:Class ;
+  rdfs:subClassOf quid:QualifiedIdentity .
+
+:since rdfs:domain :MomentaryThing .
+:until rdfs:domain :MomentaryThing .
+
+:MomentaryPlace a owl:Class ;
+  rdfs:subClassOf :Place, :MomentaryThing .
+
+:MomentaryPerson a owl:Class ;
+  rdfs:subClassOf :Person, :MomentaryThing,
+      [ a owl:Restriction ;
+        owl:onProperty :location ;
+        owl:allValuesFrom :MomentaryPlace ] .</pre>
+      </section>
+      <section>
         <h2>Application</h2>
         <p>
           Where qualification nuances are to be glossed over for casual use cases ("list all Ps for an S, regardless of details"), a kind of <q>dumbing down</q> of the indirection would be convenient, to get back to the <q>naive</q> level which was the original limitation in the choice of properties (direct relations over qualified forms).
