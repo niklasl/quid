@@ -431,11 +431,11 @@ SELECT * {
         <p>
           Obviously
           <code><a href="http://www.w3.org/2002/07/owl#sameAs">owl:sameAs</a></code> 
-          denotes the same thing. The similarity to <code>quid:qualifies</code> is confined to mechanical treatment where the different qualifications are not relevant, in which case a non-reasoning RDF application needs to follow the indirected resource in the same manner.
+          denotes the <em>same</em> thing, by declaring an alternate symbol for the same identity. The similarity to <code>quid:qualifies</code> is confined to cases of mechanical treatment of indirection in non-reasoning RDF applications, where the different qualifications are not interpreted, and the relation is simply followed to gather more data about a given resource.
         </p>
         <h3>Broader</h3>
         <p>
-          Similarly, <code><a href="http://www.w3.org/2004/02/skos/core#broader">skos:broader</a></code> can be considered an indirection. Interestingly, <code>quid:qualifies</code> is similar also in that it relates a more <q>general</q> notion. Crucially though, this notion is still within the same <q>identity</q>. So at most, there is a super-property relation here (which also is defined).
+          Similarly, <code><a href="http://www.w3.org/2004/02/skos/core#broader">skos:broader</a></code> can be considered an indirection. Interestingly, <code>quid:qualifies</code> is similar also in that it relates a more <q>general</q> notion. Crucially though, with QuID, this notion is still within the same <q>identity</q>. So at most, there is a super-property relation here (which also is defined).
         </p>
         <h3>Exact Match</h3>
         <p>
