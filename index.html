@@ -11,7 +11,7 @@
       <dt>Status</dt>
       <dd property="rdfs:comment"><em>Informal Draft</em></dd>
       <dt>Date</dt>
-      <dd property="dcterms:date">2021-12-19</dd>
+      <dd property="dcterms:date">2022-10-22</dd>
       <dt>Author</dt>
       <dd><a property="dcterms:creator" href="https://neverspace.net/id#self">Niklas Lindström</a></dd>
       <dt>License</dt>
@@ -111,7 +111,11 @@ prefix quid: &lt;https://w3id.org/quid/></pre>
                 being a possibly less qualified aspect of the same thing.
               </p>
               <p>
-                It is a sub-property of 
+                It is equivalent to
+                <a property="owl:equivalentProperty" href="http://www.w3.org/ns/prov#specializationOf"><code>prov:specializationOf</code></a>.
+              </p>
+              <p>
+                It is a sub-property of
                 <a property="rdfs:subPropertyOf" href="skos:broader"><code>skos:broader</code></a>.
               </p>
               <p property="skos:definition">
@@ -155,6 +159,12 @@ prefix quid: &lt;https://w3id.org/quid/></pre>
             </dd>
           </dl>
         </div>
+      </section>
+      <section>
+        <h2>An Equivalent Specialization</h2>
+        <p>
+          The <a href="https://www.w3.org/TR/prov-o/">W3C PROV Ontology</a> defines a notion of <a href="https://www.w3.org/TR/2013/NOTE-prov-primer-20130430/#alternate-entities-and-specialization">specialization of entities</a>, which is effectively the same as the notion of qualification defined by QuID. Users should feel free to use the <code>prov:specializationOf</code> (and inverse, <code>prov:generalizationOf</code>) directly. The QuID ontology is mainly defined as a theoretical backbone, to elaborate on the notion and its possible use cases. Especially, it elaborates on the possibility of using qualified entities as an alternative to the use of qualified relationships, to contrast the notions and challenge their differences. The usability of this approach must of course be assessed further.
+        </p>
       </section>
       <section>
         <h2>Background and Motivations</h2>
@@ -403,6 +413,10 @@ SELECT * {
         <h2>Relationship To Other Designs</h2>
         <p>
           The pattern defined by QuID is by no mean novel. It is inspired and informed by lots of prior work, and is at best an attempt at formalizing a common intersection of these.
+        </p>
+        <h3>Specialization of</h3>
+        <p>
+          The <code><a href="http://www.w3.org/ns/prov#specializationOf">prov:specializationOf</a></code> relation defined by <a href="https://www.w3.org/TR/prov-o/">W3C PROV-O</a> is a basis for <code>quid:qualifies</code>. QuID is a focused, standalone definition, comprising just a small piece of PROV, and users might find value in this, along with its defined class for qualified identities. In general though, these are considered to be interchangeable.
         </p>
         <h3>Value</h3>
         <p>
